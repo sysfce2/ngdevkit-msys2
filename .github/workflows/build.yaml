@@ -2,7 +2,7 @@ name: Build package
 on:
   push:
     branches-ignore:
-      - 'main'
+      - 'test-repo'
 jobs:
   pkgbuild:
     name: "MSYS2 package"
