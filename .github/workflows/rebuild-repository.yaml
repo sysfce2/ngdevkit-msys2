@@ -5,9 +5,11 @@ on:
       - BuildPackage
     types:
       - completed
+  workflow_dispatch:
+
 jobs:
   pkgbuild:
-    name: "MSYS2 repository"
+    name: "Rebuild MSYS2 repository"
     runs-on: windows-latest
     defaults:
       run:
@@ -30,7 +32,25 @@ jobs:
 
       - name: Publish new package version
         run: |
-          git config --global user.name 'CI build bot'
-          git config --global user.email '<>'
-          git config --global http.postBuffer 33554432
-          .ci/rebuild-msys2-repository.sh -u $GH_USER && cd repository && git push -f
+          .ci/rebuild-msys2-repository.sh -u $GH_USER
+
+      - name: Upload static files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: repository/docs/
+
+  # Deployment job
+  deploy:
+    needs: pkgbuild
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      pages: write
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

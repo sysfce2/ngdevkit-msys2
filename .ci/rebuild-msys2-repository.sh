@@ -100,6 +100,5 @@ echo "Rebuild the repository and commit the changes"
 repo-add -R ngdevkit.db.tar.gz *.pkg.tar.zst
 git add *.pkg.tar.zst ngdevkit.db ngdevkit.db.tar.gz ngdevkit.files ngdevkit.files.tar.gz
 
-echo -e "Repository rebuild $(date '+%Y%m%d%H%M')\n" > commitmsg
-for i in *.pkg.tar.zst; do echo $(echo $i | sed -e 's/mingw-w64-x86_64-\([^0-9]*\)-\(.*\)-x86_64.*/\1: \2/'); done | column -s: -t >> commitmsg
-git commit --amend --no-edit -F commitmsg
+ echo -e "Repository rebuild $(date '+%Y%m%d%H%M')\n"
+for i in *.pkg.tar.zst; do echo $(echo $i | sed -e 's/mingw-w64-x86_64-\([^0-9]*\)-\(.*\)-x86_64.*/\1: \2/'); done | column -s: -t
